@@ -1,0 +1,69 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-selenium-communication
+spec:
+  podSelector:
+    matchLabels:
+      app: selenium-chrome-node
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: selenium-hub
+      ports:
+        - protocol: TCP
+          port: 5555
+    - from: [] # Allow all ingress to chrome nodes
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: selenium-hub
+      ports:
+        - protocol: TCP
+          port: 4444
+        - protocol: TCP
+          port: 4442
+        - protocol: TCP
+          port: 4443
+    - to: [] # Allow all egress from chrome nodes
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-app-to-selenium
+spec:
+  podSelector:
+    matchLabels:
+      app: antscrapperx-multi
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: selenium-hub
+      ports:
+        - protocol: TCP
+          port: 4444
+    - to: [] # Allow all egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-hub-internet
+spec:
+  podSelector:
+    matchLabels:
+      app: selenium-hub
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - {} # Allow all ingress to hub, including from outside the cluster
+  egress:
+    - {} # Allow all egress from hub

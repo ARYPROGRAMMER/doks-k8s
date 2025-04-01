@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: selenium-hub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: selenium-hub
+  template:
+    metadata:
+      labels:
+        app: selenium-hub
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: pool-d1feg4qco-6ri8x
+      containers:
+        - name: selenium-hub
+          image: selenium/hub:4.11.0
+          ports:
+            - containerPort: 4444
+            - containerPort: 4442
+            - containerPort: 4443
+          env:
+            - name: GRID_MAX_SESSION
+              value: "4" # Total concurrent sessions across all nodes
+            - name: GRID_BROWSER_TIMEOUT
+              value: "300"
+            - name: SE_NODE_SESSION_TIMEOUT
+              value: "300"
+            - name: SE_SESSION_REQUEST_TIMEOUT
+              value: "180"
+            - name: SE_SESSION_RETRY_INTERVAL
+              value: "15"
+          livenessProbe:
+            httpGet:
+              path: /wd/hub/status
+              port: 4444
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /wd/hub/status
+              port: 4444
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+          resources:
+            limits:
+              memory: 1Gi
+              cpu: 1000m
+            requests:
+              memory: 512Mi
+              cpu: 500m

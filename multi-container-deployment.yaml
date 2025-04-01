@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: antscrapperx-multi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: antscrapperx-multi
+  template:
+    metadata:
+      labels:
+        app: antscrapperx-multi
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: pool-d1feg4qco-6ri8j
+      containers:
+        - name: antscrapperx-bot
+          image: acumensa99/antscrapperx-app-bot-grid-1:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: 2Gi
+              cpu: 2000m
+            limits:
+              memory: 3Gi
+              cpu: 3000m
+        - name: antscrapperx-api
+          image: acumensa99/antscrapperx-app-api-grid:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: 1Gi
+              cpu: 1000m
+            limits:
+              memory: 2Gi
+              cpu: 2000m
+          ports:
+            - containerPort: 8080

@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: selenium-chrome-node
+spec:
+  replicas: 2 # Change this to 2 for 4 total browsers (2 nodes × 2 sessions)
+  selector:
+    matchLabels:
+      app: selenium-chrome-node
+  template:
+    metadata:
+      labels:
+        app: selenium-chrome-node
+    spec:
+      restartPolicy: Always
+      nodeSelector:
+        kubernetes.io/hostname: pool-d1feg4qco-6ri8o
+      containers:
+        - name: selenium-chrome-node
+          image: selenium/node-chrome:4.11.0
+          ports:
+            - containerPort: 5555
+          env:
+            - name: SE_EVENT_BUS_HOST
+              value: "selenium-hub"
+            - name: SE_EVENT_BUS_PUBLISH_PORT
+              value: "4442"
+            - name: SE_EVENT_BUS_SUBSCRIBE_PORT
+              value: "4443"
+            - name: SE_NODE_MAX_SESSIONS
+              value: "2" # Maximum concurrent browser sessions per pod
+            - name: SE_NODE_OVERRIDE_MAX_SESSIONS
+              value: "true"
+            - name: SE_NODE_SESSION_TIMEOUT
+              value: "300"
+          resources:
+            limits:
+              memory: 2Gi
+              cpu: 1000m
+            requests:
+              memory: 1Gi
+              cpu: 500m
+          volumeMounts:
+            - name: dshm
+              mountPath: /dev/shm
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 2Gi

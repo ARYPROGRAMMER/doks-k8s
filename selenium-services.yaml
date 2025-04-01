@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: selenium-hub
+  annotations:
+    service.beta.kubernetes.io/do-loadbalancer-protocol: "tcp"
+    # Remove any certificate annotations since we're using TCP
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  selector:
+    app: selenium-hub
+  ports:
+    - name: web
+      port: 4444
+      targetPort: 4444
+      protocol: TCP
+      nodePort: 30444 # Explicitly defined nodePort
+    - name: publish
+      port: 4442
+      targetPort: 4442
+      protocol: TCP
+    - name: subscribe
+      port: 4443
+      targetPort: 4443
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: antscrapperx-service
+spec:
+  type: ClusterIP
+  selector:
+    app: antscrapperx-multi
+  ports:
+    - port: 8080
+      targetPort: 8080
