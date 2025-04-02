@@ -12,8 +12,8 @@ spec:
       labels:
         app: selenium-hub
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: pool-d1feg4qco-6ri8x
+      # nodeSelector:
+      #   kubernetes.io/hostname: pool-d1feg4qco-6ri8x
       containers:
         - name: selenium-hub
           image: selenium/hub:4.11.0

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: selenium-chrome-node
 spec:
-  replicas: 2 # Change this to 2 for 4 total browsers (2 nodes × 2 sessions)
+  replicas: 4 # Change this to 2 for 4 total browsers (2 nodes × 2 sessions)
   selector:
     matchLabels:
       app: selenium-chrome-node
@@ -13,8 +13,8 @@ spec:
         app: selenium-chrome-node
     spec:
       restartPolicy: Always
-      nodeSelector:
-        kubernetes.io/hostname: pool-d1feg4qco-6ri8o
+      # nodeSelector:
+      #   kubernetes.io/hostname: pool-d1feg4qco-6ri8o
       containers:
         - name: selenium-chrome-node
           image: selenium/node-chrome:4.11.0

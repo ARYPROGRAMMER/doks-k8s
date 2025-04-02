@@ -12,8 +12,8 @@ spec:
       labels:
         app: antscrapperx-multi
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: pool-d1feg4qco-6ri8j
+      # nodeSelector:
+      #   kubernetes.io/hostname: pool-d1feg4qco-6ri8j
       containers:
         - name: antscrapperx-bot
           image: acumensa99/antscrapperx-app-bot-grid-1:latest
