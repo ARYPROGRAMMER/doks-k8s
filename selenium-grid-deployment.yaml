@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: selenium-chrome-node
 spec:
-  replicas: 17 # Change this to 2 for 4 total browsers (2 nodes × 2 sessions)
+  replicas: 22 # Change this to 2 for 4 total browsers (2 nodes × 2 sessions)
   selector:
     matchLabels:
       app: selenium-chrome-node
